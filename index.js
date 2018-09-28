@@ -238,16 +238,16 @@ export default class VideoPlayer extends React.Component {
   _setPlaybackState(playbackState) {
     if (this.state.playbackState != playbackState) {
       this.props.debug &&
-        console.log(
-          '[playback]',
-          this.state.playbackState,
-          ' -> ',
-          playbackState,
-          ' [seek] ',
-          this.state.seekState,
-          ' [shouldPlay] ',
-          this.state.shouldPlay
-        );
+      console.log(
+        '[playback]',
+        this.state.playbackState,
+        ' -> ',
+        playbackState,
+        ' [seek] ',
+        this.state.seekState,
+        ' [shouldPlay] ',
+        this.state.shouldPlay
+      );
 
       this.setState({ playbackState, lastPlaybackStateUpdate: Date.now() });
     }
@@ -255,16 +255,16 @@ export default class VideoPlayer extends React.Component {
 
   _setSeekState(seekState) {
     this.props.debug &&
-      console.log(
-        '[seek]',
-        this.state.seekState,
-        ' -> ',
-        seekState,
-        ' [playback] ',
-        this.state.playbackState,
-        ' [shouldPlay] ',
-        this.state.shouldPlay
-      );
+    console.log(
+      '[seek]',
+      this.state.seekState,
+      ' -> ',
+      seekState,
+      ' [playback] ',
+      this.state.playbackState,
+      ' [shouldPlay] ',
+      this.state.shouldPlay
+    );
 
     this.setState({ seekState });
 
@@ -289,7 +289,7 @@ export default class VideoPlayer extends React.Component {
         this._setPlaybackState(PLAYBACK_STATES.ERROR);
         const errorMsg = `Encountered a fatal error during playback: ${
           playbackStatus.error
-        }`;
+          }`;
         this.setState({
           error: errorMsg,
         });
@@ -464,24 +464,24 @@ export default class VideoPlayer extends React.Component {
 
   _toggleControls = () => {
     switch (this.state.controlsState) {
-      case CONTROL_STATES.SHOWN:
-        // If the controls are currently shown, a tap should hide controls quickly
-        this.setState({ controlsState: CONTROL_STATES.HIDING });
-        this._hideControls(true);
-        break;
-      case CONTROL_STATES.HIDDEN:
-        // If the controls are currently, show controls with fade-in animation
-        this._showControls();
-        this.setState({ controlsState: CONTROL_STATES.SHOWING });
-        break;
-      case CONTROL_STATES.HIDING:
-        // If controls are fading out, a tap should reverse, and show controls
-        this.setState({ controlsState: CONTROL_STATES.SHOWING });
-        this._showControls();
-        break;
-      case CONTROL_STATES.SHOWING:
-        // A tap when the controls are fading in should do nothing
-        break;
+    case CONTROL_STATES.SHOWN:
+      // If the controls are currently shown, a tap should hide controls quickly
+      this.setState({ controlsState: CONTROL_STATES.HIDING });
+      this._hideControls(true);
+      break;
+    case CONTROL_STATES.HIDDEN:
+      // If the controls are currently, show controls with fade-in animation
+      this._showControls();
+      this.setState({ controlsState: CONTROL_STATES.SHOWING });
+      break;
+    case CONTROL_STATES.HIDING:
+      // If controls are fading out, a tap should reverse, and show controls
+      this.setState({ controlsState: CONTROL_STATES.SHOWING });
+      this._showControls();
+      break;
+    case CONTROL_STATES.SHOWING:
+      // A tap when the controls are fading in should do nothing
+      break;
     }
   };
 
@@ -572,12 +572,12 @@ export default class VideoPlayer extends React.Component {
           style={
             center
               ? {
-                  backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                  justifyContent: 'center',
-                  width: centeredContentWidth,
-                  height: centeredContentWidth,
-                  borderRadius: centeredContentWidth,
-                }
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                justifyContent: 'center',
+                width: centeredContentWidth,
+                height: centeredContentWidth,
+                borderRadius: centeredContentWidth,
+              }
               : {}
           }>
           {children}
@@ -591,8 +591,8 @@ export default class VideoPlayer extends React.Component {
         style={[
           {
             position: 'absolute',
-            left: (videoWidth - centeredContentWidth) / 2,
-            top: (videoHeight - centeredContentWidth) / 2,
+            left: (Dimensions.get('window').width - centeredContentWidth) / 2,
+            top: (Dimensions.get('window').height - centeredContentWidth) / 2,
             width: centeredContentWidth,
             height: centeredContentWidth,
             flexDirection: 'column',
@@ -625,6 +625,7 @@ export default class VideoPlayer extends React.Component {
         <View
           style={{
             backgroundColor: 'black',
+            flex: 1
           }}>
           <Video
             source={source}
@@ -633,17 +634,14 @@ export default class VideoPlayer extends React.Component {
               ref && ref(component);
             }}
             onPlaybackStatusUpdate={this._playbackCallback.bind(this)}
-            style={{
-              width: videoWidth,
-              height: videoHeight,
-            }}
+            style={{flex: 1}}
             {...otherVideoProps}
           />
 
           {/* Spinner */}
           {((this.state.playbackState == PLAYBACK_STATES.BUFFERING &&
             Date.now() - this.state.lastPlaybackStateUpdate >
-              BUFFERING_SHOW_DELAY) ||
+            BUFFERING_SHOW_DELAY) ||
             this.state.playbackState == PLAYBACK_STATES.LOADING) && (
             <CenteredView>
               <Spinner />
@@ -653,26 +651,26 @@ export default class VideoPlayer extends React.Component {
           {/* Play/pause buttons */}
           {(this.state.seekState == SEEK_STATES.NOT_SEEKING ||
             this.state.seekState == SEEK_STATES.SEEKED) &&
-            (this.state.playbackState == PLAYBACK_STATES.PLAYING ||
-              this.state.playbackState == PLAYBACK_STATES.PAUSED) && (
-              <CenteredView
-                pointerEvents={
-                  this.state.controlsState === CONTROL_STATES.HIDDEN
-                    ? 'none'
-                    : 'auto'
-                }
-                style={{
-                  opacity: this.state.controlsOpacity,
-                }}>
-                <Control center={true} callback={this._togglePlay.bind(this)}>
-                  {this.state.playbackState == PLAYBACK_STATES.PLAYING ? (
-                    <PauseIcon />
-                  ) : (
-                    <PlayIcon />
-                  )}
-                </Control>
-              </CenteredView>
-            )}
+          (this.state.playbackState == PLAYBACK_STATES.PLAYING ||
+            this.state.playbackState == PLAYBACK_STATES.PAUSED) && (
+            <CenteredView
+              pointerEvents={
+                this.state.controlsState === CONTROL_STATES.HIDDEN
+                  ? 'none'
+                  : 'auto'
+              }
+              style={{
+                opacity: this.state.controlsOpacity,
+              }}>
+              <Control center={true} callback={this._togglePlay.bind(this)}>
+                {this.state.playbackState == PLAYBACK_STATES.PLAYING ? (
+                  <PauseIcon />
+                ) : (
+                  <PlayIcon />
+                )}
+              </Control>
+            </CenteredView>
+          )}
 
           {/* Replay button to show at the end of a video */}
           {this.state.playbackState == PLAYBACK_STATES.ENDED && (
@@ -697,7 +695,7 @@ export default class VideoPlayer extends React.Component {
             }
             style={{
               position: 'absolute',
-              bottom: 0,
+              bottom: 10,
               width: videoWidth,
               opacity: this.state.controlsOpacity,
               flexDirection: 'row',
